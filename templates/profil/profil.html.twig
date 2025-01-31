@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProfilController!{% endblock %}
+
+{% block body %}
+    <ul>
+        <li><a href="{{ path('app_user_index') }}">Mes coordonnées</a></li>
+        <li><a href="{{ path('app_address_index') }}">Mes adresses</a></li>
+    </ul>
+{% endblock %}

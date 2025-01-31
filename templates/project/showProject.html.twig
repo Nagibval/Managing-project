@@ -1,0 +1,64 @@
+{% block body %}
+    <h4>Détails du projet : {{ project.libelle }}</h4>
+    <a href="{{ path('app_project_affecter', {'id' : project.id}) }}">
+        <i class="fs-2 bi bi-person-add"></i>
+    </a>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ project.id }}</td>
+            </tr>
+            <tr>
+                <th>Libelle</th>
+                <td>{{ project.libelle }}</td>
+            </tr>
+            <tr>
+                <th>Code</th>
+                <td>{{ project.code }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ project.description }}</td>
+            </tr>
+            <tr>
+                <th>BeginDate</th>
+                <td>{{ project.beginDate ? project.beginDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>EndDate</th>
+                <td>{{ project.endDate ? project.endDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>EstimateEndDate</th>
+                <td>{{ project.estimateEndDate ? project.estimateEndDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>IsFinished</th>
+                <td>{{ project.isFinished ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Priority</th>
+                <td>{{ project.priority }}</td>
+            </tr>
+            <tr>
+                <th>Cost</th>
+                <td>{{ project.cost }}</td>
+            </tr>
+            <tr>
+                <th>IsSuccess</th>
+                <td>{{ project.isSuccess ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_project_index') }}">back to list</a>
+
+    <a href="{{ path('app_project_edit', {'id': project.id}) }}">edit</a>
+
+    {{ include('project/deleteProject.html.twig') }}
+    
+{% endblock %}
+
+
+

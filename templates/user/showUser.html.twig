@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User{% endblock %}
+
+{% block body %}
+    <h3>{{ user.firstName ~ ' ' ~ user.lastName }}</h3>
+    <a href="{{ path('app_user_index') }}">
+    <svg xmlns="http://www.w3.org/2000/svg" height="5%" width="5%" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#63E6BE" d="M459.5 440.6c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29l0-320c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4L288 214.3l0 41.7 0 41.7L459.5 440.6zM256 352l0-96 0-128 0-32c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4l-192 160C4.2 237.5 0 246.5 0 256s4.2 18.5 11.5 24.6l192 160c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29l0-64z"/></svg>
+    </a>
+    <table class="table w-75 mx-auto">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ user.id }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ user.password }}</td>
+            </tr>
+            <tr>
+                <th>Matricule</th>
+                <td>{{ user.matricule }}</td>
+            </tr>
+            <tr>
+                <th>FirstName</th>
+                <td>{{ user.firstName }}</td>
+            </tr>
+            <tr>
+                <th>LastName</th>
+                <td>{{ user.lastName }}</td>
+            </tr>
+            <tr>
+                <th>Birthday</th>
+                <td>{{ user.birthday ? user.birthday|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Telephone</th>
+                <td>{{ user.telephone }}</td>
+            </tr>
+            <tr>
+                <th>Service</th>
+                <td>{{ user.service }}</td>
+            </tr>
+            <tr>
+                <th>Speciality</th>
+                <td>{{ user.speciality }}</td>
+            </tr>
+            <tr>
+                <th>Photo</th>
+                <td>{{ user.photo }}</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="mx-auto w-75">
+        <a href="{{ path('app_user_edit', {'id': user.id}) }}">
+            <input type="button" class="btn btn-primary" value="Editer">
+        </a>
+    </div>
+
+    {# {{ include('user/deleteUser.html.twig') }} #}
+{% endblock %}

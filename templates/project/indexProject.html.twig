@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Project index{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-11">
+            <h3>Mes projects</h3>
+        </div>
+        <div class="col-1">
+            <a href="{{ path('app_project_new') }}">
+                <i class="fs-1 bi bi-node-plus-fill"></i>
+            </a>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                {# <th>Id</th> #}
+                <th>Libellé</th>
+                <th>Code</th>
+                <th>Description</th>
+                <th>Date début</th>
+                <th>Date fin</th>
+                <th>Date fin estimé</th>
+                <th>Coût</th>
+                <th>IsFinished</th>
+                {# <th>Priority</th> #}
+                <th>IsSuccess</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for project in projects %}
+            <tr>
+                {# <td>{{ project.id }}</td> #}
+                <td>{{ project.libelle }}</td>
+                <td>{{ project.code }}</td>
+                <td>{{ project.description }}</td>
+                <td>{{ project.beginDate ? project.beginDate|date('d-m-Y') : '' }}</td>
+                <td>{{ project.endDate ? project.endDate|date('d-m-Y') : '' }}</td>
+                <td>{{ project.estimateEndDate ? project.estimateEndDate|date('d-m-Y') : '' }}</td>
+                <td>{{ project.cost }} €</td>
+                <td>{{ project.isFinished ? 'Yes' : 'No' }}</td>
+                {# <td>{{ project.priority }}</td> #}
+                <td>{{ project.isSuccess ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_project_show', {'id': project.id}) }}">
+                        <i class="fs-5 bi bi-eye"></i>
+                    </a>
+                    <a href="{{ path('app_project_edit', {'id': project.id}) }}">
+                        <i class="fs-5 bi bi-pencil-square"></i>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

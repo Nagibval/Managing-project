@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Affecter membres{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-3">
+            <h3>Filtrer</h3>
+            {{ form(f) }}
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <h4>Employés</h4>
+                {% for user in users %}
+                    <div class="col-md-4 text-center">
+                        <h5>{{ user.matricule }}</h5>
+                        <h5>{{ user.firstName }}</h5>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

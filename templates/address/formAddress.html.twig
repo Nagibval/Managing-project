@@ -1,0 +1,11 @@
+<div class="mx-auto w-75">
+    {{ form_start(form) }}
+        {{ form_row(form.title) }}
+        {{ form_row(form.fname, {'value': app.user.firstName }) }}
+        {{ form_row(form.lname, {'value': app.user.lastName }) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-primary">{{ button_label|default('Valider') }}</button>
+    {{ form_end(form) }}
+    <i class="fa-solid fa-floppy-disk"></i>
+    
+</div>

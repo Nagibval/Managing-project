@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Address{% endblock %}
+
+{% block body %}
+    <h3>{{ app.user.firstName ~ ' ' ~ app.user.lastName }}</h3>
+    <a href="{{ path('app_address_index') }}">
+        <svg xmlns="http://www.w3.org/2000/svg" height="5%" width="5%" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#63E6BE" d="M459.5 440.6c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29l0-320c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4L288 214.3l0 41.7 0 41.7L459.5 440.6zM256 352l0-96 0-128 0-32c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4l-192 160C4.2 237.5 0 246.5 0 256s4.2 18.5 11.5 24.6l192 160c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29l0-64z"/></svg>
+    </a>
+    <table class="table w-75 mx-auto">
+        <tbody>
+            <tr>
+                <th>Identifiant</th>
+                <td>{{ address.id }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ address.title }}</td>
+            </tr>
+            <tr>
+                <th>Prénom</th>
+                <td>{{ address.fname }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ address.lname }}</td>
+            </tr>
+            <tr>
+                <th>Adresse</th>
+                <td>{{ address.address }}</td>
+            </tr>
+            <tr>
+                <th>Ville</th>
+                <td>{{ address.city }}</td>
+            </tr>
+            <tr>
+                <th>Code postale</th>
+                <td>{{ address.cp }}</td>
+            </tr>
+            <tr>
+                <th>Pays</th>
+                <td>{{ address.country }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="row mx-auto w-75">
+        <div class="col-2">
+            <a href="{{ path('app_address_edit', {'id': address.id}) }}">
+                <input type="button" class="btn btn-primary" value="Editer">
+            </a>
+        </div>
+        <div class="col-2">
+            {{ include('address/deleteAddress.html.twig') }}
+        </div
+    </div>
+    
+{% endblock %}
