@@ -40,4 +40,29 @@ class ProjectRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+
+    public function findByFilters(array $filters)
+{
+    $query = $this->createQueryBuilder('p');
+
+    if (!empty($filters['name'])) {
+        $query->andWhere('p.libelle LIKE :name')
+              ->setParameter('name', '%' . $filters['name'] . '%');
+    }
+
+    if (!empty($filters['status'])) {
+        $query->andWhere('p.status = :status')
+              ->setParameter('status', $filters['status']);
+    }
+
+    return $query->getQuery()->getResult();
+}
+
+    
+
+
+
+
+
 }

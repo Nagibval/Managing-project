@@ -3,13 +3,13 @@
 namespace App\Form;
 
 use App\Entity\Project;
-use App\Entity\User;
-use Doctrine\DBAL\Types\BooleanType;
-use Doctrine\DBAL\Types\FloatType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -18,57 +18,27 @@ class ProjectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('libelle', TextType::class, [
-                'label' => 'Libellé',
-                'attr' => [
-                    'placeholder' => 'Le titre du projet'
-                ]
+            ->add('libelle', TextType::class, ['label' => 'Nom du projet'])
+            ->add('code', TextType::class, ['label' => 'Code'])
+            ->add('description', TextareaType::class, ['label' => 'Description', 'required' => false])
+            ->add('beginDate', DateType::class, ['label' => 'Date de début', 'widget' => 'single_text'])
+            ->add('endDate', DateType::class, ['label' => 'Date de fin', 'widget' => 'single_text'])
+            ->add('estimateEndDate', DateType::class, ['label' => 'Date fin estimée', 'widget' => 'single_text'])
+            ->add('cost', NumberType::class, ['label' => 'Coût'])
+            ->add('status', TextType::class, ['label' => 'Statut', 'required' => false])
+            ->add('isFinished', CheckboxType::class, [
+                'label' => 'Projet terminé',
+                'required' => false,
+                'mapped' => true 
             ])
-            ->add('code', TextType::class, [
-                'label' => 'Code',
-                'attr' => [
-                    'placeholder' => 'code'
-                ]
+            ->add('isSuccess', CheckboxType::class, [
+                'label' => 'Projet réussi',
+                'required' => false,
+                'mapped' => false
             ])
-            ->add('description', TextType::class, [
-                'label' => 'Description',
-                'attr' => [
-                    'placeholder' => 'Un court descriptif'
-                ]
-            ])
-            ->add('beginDate', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('endDate', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('estimateEndDate', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('priority', IntegerType::class, [
-                'label' => 'Priorité',
-                'attr' => [
-                    'placeholder' => 'Est-ce un projet prioritaire?'
-                ]
-            ])
-            ->add('cost', IntegerType::class, [
-                'label' => 'Coût',
-                'attr' => [
-                    'placeholder' => 'coût du projet'
-                ]
-            ])
-            ->add('isFinished', null, [
-                'label' => 'Terminé'
-            ])
-            ->add('isSuccess', null, [
-                'label' => 'Avec succès'
-            ])
-            // ->add('user', EntityType::class, [
-            //     'class' => User::class,
-            //     'choice_label' => 'id',
-            //     'multiple' => true,
-            // ])
-        ;
+            
+            
+            ->add('submit', SubmitType::class, ['label' => 'Créer']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

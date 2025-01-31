@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Form\UserFilterType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,18 +12,27 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Entity\Search;
-use App\Form\SearchType;
-
-
 
 #[Route('/user')]
 class UserController extends AbstractController
 {
-    #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    #[Route('/', name: 'app_user_index', methods: ['GET', 'POST'])]
+    public function index(UserRepository $userRepository, Request $request): Response
     {
-        return $this->render('user/indexUser.html.twig');
+        $form = $this->createForm(UserFilterType::class);
+        $form->handleRequest($request);
+
+        $filters = [];
+        if ($form->isSubmitted() && $form->isValid()) {
+            $filters = $form->getData();
+        }
+
+        $users = $userRepository->findByFilters($filters);
+
+        return $this->render('user/indexUser.html.twig', [
+            'users' => $users,
+            'form' => $form->createView(),
+        ]);
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
@@ -33,19 +43,16 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Hasher le mdp
-                // récupérer le mot de passe à partir di form
-                $user = $form->getData();
-                $mdp = $user->getPassword();
-                $mdp = $uphi->hashPassword($user, $mdp);
-                // remettre le mdp dans l'objet user
-                $user->setPassword($mdp);
-            // Récupérer photo et réinitialiser le chemin
+            $user = $form->getData();
+            $mdp = $user->getPassword();
+            $mdp = $uphi->hashPassword($user, $mdp);
+            $user->setPassword($mdp);
+
             $chemin = "assets/images/user";
             $fichier = $form['photo']->getData();
             $fichier->move($chemin, $fichier->getClientOriginalName());
-            $user->setPhoto("assets/images/user" . "/" . $fichier->getClientOriginalName());
-            // Sauvegarde dans la BDD
+            $user->setPhoto("assets/images/user/" . $fichier->getClientOriginalName());
+
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -74,20 +81,16 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Hasher le mdp
-                // récupérer le mot de passe à partir di form
-                $user = $form->getData();
-                $mdp = $user->getPassword();
-                $mdp = $uphi->hashPassword($user, $mdp);
-                // remettre le mdp dans l'objet user
-                $user->setPassword($mdp);
-                // Récupérer photo et réinitialiser le chemin
+            $user = $form->getData();
+            $mdp = $user->getPassword();
+            $mdp = $uphi->hashPassword($user, $mdp);
+            $user->setPassword($mdp);
+
             $chemin = "assets/images/user";
             $fichier = $form['photo']->getData();
             $fichier->move($chemin, $fichier->getClientOriginalName());
-            $user->setPhoto("assets/images/user" . "/" . $fichier->getClientOriginalName());
-            
-            // Ajout dans la BDD
+            $user->setPhoto("assets/images/user/" . $fichier->getClientOriginalName());
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);

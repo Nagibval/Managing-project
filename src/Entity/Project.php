@@ -34,8 +34,8 @@ class Project
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $estimateEndDate = null;
 
-    #[ORM\Column]
-    private ?bool $isFinished = null;
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $isFinished = false;
 
     #[ORM\Column(nullable: true)]
     private ?int $priority = null;
@@ -43,18 +43,21 @@ class Project
     #[ORM\Column]
     private ?float $cost = null;
 
-    #[ORM\Column]
-    private ?bool $isSuccess = null;
+    #[ORM\Column(type: 'boolean', nullable: false)]
+    private ?bool $isSuccess = false; // Correction ici
+
+    #[ORM\Column(type: "string", length: 20, nullable: true)]
+    private ?string $status = null;
 
     /**
      * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'projects')]
-    private Collection $user;
+    private Collection $users;
 
     public function __construct()
     {
-        $this->user = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -70,7 +73,6 @@ class Project
     public function setLibelle(string $libelle): static
     {
         $this->libelle = $libelle;
-
         return $this;
     }
 
@@ -82,7 +84,6 @@ class Project
     public function setCode(string $code): static
     {
         $this->code = $code;
-
         return $this;
     }
 
@@ -94,7 +95,6 @@ class Project
     public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -106,7 +106,6 @@ class Project
     public function setBeginDate(\DateTimeInterface $beginDate): static
     {
         $this->beginDate = $beginDate;
-
         return $this;
     }
 
@@ -118,7 +117,6 @@ class Project
     public function setEndDate(\DateTimeInterface $endDate): static
     {
         $this->endDate = $endDate;
-
         return $this;
     }
 
@@ -130,7 +128,6 @@ class Project
     public function setEstimateEndDate(\DateTimeInterface $estimateEndDate): static
     {
         $this->estimateEndDate = $estimateEndDate;
-
         return $this;
     }
 
@@ -139,10 +136,9 @@ class Project
         return $this->isFinished;
     }
 
-    public function setFinished(bool $isFinished): static
+    public function setFinished(?bool $isFinished): static
     {
         $this->isFinished = $isFinished;
-
         return $this;
     }
 
@@ -154,7 +150,6 @@ class Project
     public function setPriority(?int $priority): static
     {
         $this->priority = $priority;
-
         return $this;
     }
 
@@ -166,34 +161,32 @@ class Project
     public function setCost(float $cost): static
     {
         $this->cost = $cost;
-
         return $this;
     }
 
-    public function isSuccess(): ?bool
+    public function getSuccess(): ?bool
     {
         return $this->isSuccess;
     }
 
-    public function setSuccess(bool $isSuccess): static
+    public function setSuccess(?bool $isSuccess): static
     {
         $this->isSuccess = $isSuccess;
-
         return $this;
     }
 
     /**
      * @return Collection<int, User>
      */
-    public function getUser(): Collection
+    public function getUsers(): Collection
     {
-        return $this->user;
+        return $this->users;
     }
 
     public function addUser(User $user): static
     {
-        if (!$this->user->contains($user)) {
-            $this->user->add($user);
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
         }
 
         return $this;
@@ -201,8 +194,18 @@ class Project
 
     public function removeUser(User $user): static
     {
-        $this->user->removeElement($user);
+        $this->users->removeElement($user);
+        return $this;
+    }
 
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): static
+    {
+        $this->status = $status;
         return $this;
     }
 }

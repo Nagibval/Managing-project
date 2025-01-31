@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Tâches{% endblock %}
+
+{% block body %}
+    <h1>Liste des Tâches</h1>
+
+    {# Formulaire de filtre #}
+    {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.status) }}
+        {{ form_row(form.dueDate) }}
+        <button type="submit" class="btn btn-primary">Filtrer</button>
+    {{ form_end(form) }}
+
+    {# Liste des tâches #}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Statut</th>
+                <th>Date limite</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+                <tr>
+                    <td>{{ task.name }}</td>
+                    <td>{{ task.status }}</td>
+                    <td>{{ task.dueDate ? task.dueDate|date('d-m-Y') : 'N/A' }}</td>
+                    <td>
+                        <a href="{{ path('app_task_show', {'id': task.id}) }}" class="btn btn-info">Voir</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucune tâche trouvée.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

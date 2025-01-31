@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Classes\Search;
 use App\Entity\Project;
 use App\Form\ProjectType;
+use App\Form\ProjectFilterType;
 use App\Form\SearchType;
 use App\Repository\ProjectRepository;
 use App\Repository\UserRepository;
@@ -17,11 +18,22 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/project')]
 class ProjectController extends AbstractController
 {
-    #[Route('/', name: 'app_project_index', methods: ['GET'])]
-    public function index(ProjectRepository $projectRepository): Response
+    #[Route('/', name: 'app_project_index', methods: ['GET', 'POST'])]
+    public function index(ProjectRepository $projectRepository, Request $request): Response
     {
+        $form = $this->createForm(ProjectFilterType::class);
+        $form->handleRequest($request);
+
+        $filters = [];
+        if ($form->isSubmitted() && $form->isValid()) {
+            $filters = $form->getData();
+        }
+
+        $projects = $projectRepository->findByFilters($filters);
+
         return $this->render('project/indexProject.html.twig', [
-            'projects' => $projectRepository->findAll(),
+            'projects' => $projects,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -30,22 +42,20 @@ class ProjectController extends AbstractController
     {
         $project = new Project();
         $form = $this->createForm(ProjectType::class, $project);
-        $project->setFinished(false);
-        $project->setSuccess(false);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($project);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_project_index', [], Response::HTTP_SEE_OTHER);
+    
+            return $this->redirectToRoute('app_project_index');
         }
-
+    
         return $this->render('project/newProject.html.twig', [
-            'project' => $project,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
+    
 
     #[Route('/{id}', name: 'app_project_show', methods: ['GET'])]
     public function show(Project $project): Response
@@ -73,7 +83,7 @@ class ProjectController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_project_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'app_project_delete', methods: ['POST'])]
     public function delete(Request $request, Project $project, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$project->getId(), $request->getPayload()->get('_token'))) {
